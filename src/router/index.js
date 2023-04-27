@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import CountryDeatil from "@/views/CountryDeatil.vue";
+import { countryService } from '@/stores/index.js'
+import * as Analytics from "@/utils/analytics.js";
 
 Vue.use(VueRouter)
 
@@ -8,18 +11,36 @@ const routes = [
   {
     path: '/',
     name: 'home',
+    redirect: '/home-page',
     component: HomeView
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: function () {
-      return import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-    }
-  }
+    beforeEnter: async (to, from, next) => {
+      countryService.initTheme();
+      Analytics.page_view({
+        title: "home-page",
+        path: to.fullPath,
+      });
+      next();
+    },
+    path: "/home-page",
+    component: () => import("@/views/Home.vue"),
+    props: route => ({ region: route.query.region })
+  },
+  {
+    beforeEnter: (to, from, next) => {
+      countryService.initTheme();
+      Analytics.page_view({
+        title: "country-detail",
+        path: to.fullPath,
+      });
+      next();
+    },
+    path: "/country-detail",
+    name: 'country-detail',
+    component: CountryDeatil,
+    props: route => ({ countryName: route.query.countryName })
+  },
 ]
 
 const router = new VueRouter({
