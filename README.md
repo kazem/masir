@@ -1,6 +1,7 @@
 # masir
 
-you can see demo in [here](https://masir-34ac2.web.app)
+you can see demo in [here](https://masir-34ac2.web.app).<br />
+Note: for send request to [address](https://restcountries.com), please turn on your VPN.
 
 ## Project setup
 ```
